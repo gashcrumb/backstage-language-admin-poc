@@ -34,7 +34,64 @@ import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 
+import { UnifiedThemeProvider } from '@backstage/theme';
+import LightIcon from '@mui/icons-material/WbSunny';
+import DarkIcon from '@mui/icons-material/Brightness2';
+import { lightTheme, darkTheme } from 'patternfly-backstage-theme';
+
+import { appTranslationRef } from './translation';
+import {
+  I18NExampleFrontendPage,
+  i18nExampleFrontendTranslationRef,
+} from '@internal/plugin-i18n-example-frontend';
+import { userSettingsTranslationRef } from '@backstage/plugin-user-settings/alpha';
+import { createTranslationResource } from '@backstage/core-plugin-api/alpha';
+import {
+  LanguageAdminPage,
+  languageAdminTranslationRef,
+} from '@internal/plugin-language-admin';
+
 const app = createApp({
+  __experimentalTranslations: {
+    availableLanguages: ['en', 'de', 'ja'],
+    resources: [
+      createTranslationResource({
+        translations: {
+          default: async () => await import('./locales/app/en.json'),
+          de: async () => await import('./locales/app/de.json'),
+          ja: async () => await import('./locales/app/ja.json'),
+        },
+        ref: appTranslationRef,
+      }),
+      createTranslationResource({
+        translations: {
+          default: async () =>
+            await import('./locales/i18n-example-frontend/en.json'),
+          de: async () =>
+            await import('./locales/i18n-example-frontend/de.json'),
+          ja: async () =>
+            await import('./locales/i18n-example-frontend/ja.json'),
+        },
+        ref: i18nExampleFrontendTranslationRef,
+      }),
+      createTranslationResource({
+        translations: {
+          default: async () => await import('./locales/language-admin/en.json'),
+          de: async () => await import('./locales/language-admin/de.json'),
+          ja: async () => await import('./locales/language-admin/ja.json'),
+        },
+        ref: languageAdminTranslationRef,
+      }),
+      createTranslationResource({
+        translations: {
+          default: async () => await import('./locales/user-settings/en.json'),
+          de: async () => await import('./locales/user-settings/de.json'),
+          ja: async () => await import('./locales/user-settings/ja.json'),
+        },
+        ref: userSettingsTranslationRef,
+      }),
+    ],
+  },
   apis,
   bindRoutes({ bind }) {
     bind(catalogPlugin.externalRoutes, {
@@ -53,6 +110,26 @@ const app = createApp({
       catalogIndex: catalogPlugin.routes.catalogIndex,
     });
   },
+  themes: [
+    {
+      id: 'light-theme',
+      title: 'Light Theme',
+      variant: 'light',
+      icon: <LightIcon />,
+      Provider: ({ children }) => (
+        <UnifiedThemeProvider theme={lightTheme} children={children} />
+      ),
+    },
+    {
+      id: 'dark-theme',
+      title: 'Dark Theme',
+      variant: 'dark',
+      icon: <DarkIcon />,
+      Provider: ({ children }) => (
+        <UnifiedThemeProvider theme={darkTheme} children={children} />
+      ),
+    },
+  ],
 });
 
 const routes = (
@@ -93,6 +170,11 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+    <Route
+      path="/i18n-example-frontend"
+      element={<I18NExampleFrontendPage />}
+    />
+    <Route path="/language-admin" element={<LanguageAdminPage />} />
   </FlatRoutes>
 );
 

@@ -1,0 +1,15 @@
+{
+  "A description of your plugin goes here.": "ここにプラグインの説明が入ります。",
+  "All content should be wrapped in a card like this.": "すべての内容はこのようにカードに包まれている必要があります。",
+  "Avatar": "アバター",
+  "Email": "Eメール",
+  "Example User List": "ユーザーリストの例",
+  "Information card": "情報カード",
+  "Lifecycle": "ライフサイクル",
+  "Name": "名前",
+  "Nationality": "国籍",
+  "Optional subtitle": "オプションのサブタイトル",
+  "Owner": "所有者",
+  "Plugin title": "プラグインのタイトル",
+  "Welcome to {{appName}}": "へようこそ {{appName}}"
+}

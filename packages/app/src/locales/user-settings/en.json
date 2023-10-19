@@ -1,0 +1,12 @@
+{
+  "change_the_language": "Change the language",
+  "change_the_theme_mode": "Change the theme mode",
+  "language": "Language",
+  "select_lng": "Select language {{language}}",
+  "select_theme_auto": "Select Auto Theme",
+  "select_theme": "Select {{theme}}",
+  "theme_auto": "Auto",
+  "theme_dark": "Dark",
+  "theme_light": "Light",
+  "theme": "Theme"
+}

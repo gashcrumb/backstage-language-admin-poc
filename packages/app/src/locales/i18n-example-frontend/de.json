@@ -1,0 +1,15 @@
+{
+  "A description of your plugin goes here.": "Eine Beschreibung Ihres Plugins finden Sie hier.",
+  "All content should be wrapped in a card like this.": "Der gesamte Inhalt sollte in einer solchen Karte verpackt sein.",
+  "Avatar": "Benutzerbild",
+  "Email": "Email",
+  "Example User List": "Beispielbenutzerliste",
+  "Information card": "Informationskarte",
+  "Lifecycle": "Lebenszyklus",
+  "Name": "Name",
+  "Nationality": "Staatsangehörigkeit",
+  "Optional subtitle": "Optionaler Untertitel",
+  "Owner": "Eigentümer",
+  "Plugin title": "Plugin-Titel",
+  "Welcome to {{appName}}": "Willkommen zu {{appName}}"
+}

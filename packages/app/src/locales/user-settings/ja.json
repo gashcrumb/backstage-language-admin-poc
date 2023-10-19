@@ -1,0 +1,12 @@
+{
+  "change_the_language": "言語を変更",
+  "change_the_theme_mode": "テーマモードを変更",
+  "language": "言語",
+  "select_lng": "言語を選択 {{language}}",
+  "select_theme_auto": "自動テーマを選択",
+  "select_theme": "{{theme}}を選択",
+  "theme_auto": "自動",
+  "theme_dark": "ダーク",
+  "theme_light": "ライト",
+  "theme": "テーマ"
+}
