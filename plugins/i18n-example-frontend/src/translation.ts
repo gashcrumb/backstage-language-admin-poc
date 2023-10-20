@@ -19,5 +19,6 @@ export const i18nExampleFrontendTranslationRef = createTranslationRef({
     Owner: 'Owner',
     'Plugin title': 'Plugin title',
     'Welcome to {{appName}}': 'Welcome to {{appName}}',
+    Support: 'Support',
   },
 });

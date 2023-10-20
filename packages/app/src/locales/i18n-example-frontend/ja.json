@@ -11,5 +11,6 @@
   "Optional subtitle": "オプションのサブタイトル",
   "Owner": "所有者",
   "Plugin title": "プラグインのタイトル",
-  "Welcome to {{appName}}": "へようこそ {{appName}}"
+  "Welcome to {{appName}}": "へようこそ {{appName}}",
+  "Support": "サポート"
 }

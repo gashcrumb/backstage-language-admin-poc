@@ -11,5 +11,6 @@
   "Optional subtitle": "Optional subtitle",
   "Owner": "Owner",
   "Plugin title": "Plugin title",
-  "Welcome to {{appName}}": "Welcome to {{appName}}"
+  "Welcome to {{appName}}": "Welcome to {{appName}}",
+  "Support": "Support"
 }

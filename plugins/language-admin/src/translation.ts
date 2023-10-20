@@ -17,5 +17,6 @@ export const languageAdminTranslationRef = createTranslationRef({
     Permissions: 'Permissions',
     Plugins: 'Plugins',
     Search: 'Search',
+    Support: 'Support',
   },
 });

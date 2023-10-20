@@ -46,7 +46,7 @@ export const AdminPage = () => {
               <LinkButton to={''} color="primary" variant="contained">
                 {t('Add')}
               </LinkButton>
-              <SupportButton>
+              <SupportButton title={t('Support')}>
                 A description of your plugin goes here.
               </SupportButton>
             </ContentHeader>

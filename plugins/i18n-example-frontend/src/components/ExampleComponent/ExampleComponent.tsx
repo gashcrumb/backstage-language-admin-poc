@@ -18,21 +18,23 @@ export const ExampleComponent = () => {
   return (
     <Page themeId="tool">
       <Header
-        title={t('Welcome to {{appName}}', { appName: 'i18n example frontend' } as any)}
-        subtitle={t("Optional subtitle")}
+        title={t('Welcome to {{appName}}', {
+          appName: 'i18n example frontend',
+        } as any)}
+        subtitle={t('Optional subtitle')}
       >
         <HeaderLabel label={t('Owner')} value="Team X" />
         <HeaderLabel label={t('Lifecycle')} value="Alpha" />
       </Header>
       <Content>
-        <ContentHeader title={t("Plugin title")}>
-          <SupportButton>
+        <ContentHeader title={t('Plugin title')}>
+          <SupportButton title={t('Support')}>
             {t('A description of your plugin goes here.')}
           </SupportButton>
         </ContentHeader>
         <Grid container spacing={3} direction="column">
           <Grid item>
-            <InfoCard title={t("Information card")}>
+            <InfoCard title={t('Information card')}>
               <Typography variant="body1">
                 {t('All content should be wrapped in a card like this.')}
               </Typography>
