@@ -9,11 +9,21 @@ import {
   TabbedLayout,
 } from '@backstage/core-components';
 import { LanguageTable } from '../LanguageTable';
-import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
+import {
+  appLanguageApiRef,
+  translationApiRef,
+  useTranslationRef,
+} from '@backstage/core-plugin-api/alpha';
 import { languageAdminTranslationRef } from '../../translation';
+import { useApi } from '@backstage/core-plugin-api';
 
 export const AdminPage = () => {
   const { t } = useTranslationRef(languageAdminTranslationRef);
+  const appLanguageApi = useApi(appLanguageApiRef);
+  const translationApi = useApi(translationApiRef);
+  console.log('available languages: ', appLanguageApi.getAvailableLanguages());
+  console.log('current language: ', appLanguageApi.getLanguage());
+  console.log('translationApi: ', translationApi);
   return (
     <Page themeId="tool">
       <Header title={t('Administration')} />

@@ -1,94 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableColumn,
-  Progress,
   ResponseErrorPanel,
 } from '@backstage/core-components';
-import useAsync from 'react-use/lib/useAsync';
 import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
 import { languageAdminTranslationRef } from '../../translation';
+import {
+  Language,
+  ListLanguagesOptions,
+  languageStorageApiRef,
+} from '../../api';
+import { useApi } from '@backstage/core-plugin-api';
 
-export const exampleLanguages = {
-  results: [
-    {
-      name: 'English (US)',
-      metadataValue: 'en_US',
-      created: new Date('03/22/2022'),
-      isDefault: true,
-    },
-    {
-      name: 'German (DE)',
-      metadataValue: 'de_DE',
-      created: new Date('03/01/2022'),
-      isDefault: false,
-    },
-    {
-      name: 'Japanese (JA)',
-      metadataValue: 'ja_JP',
-      created: new Date(),
-      isDefault: false,
-    },
-  ],
-};
+const PAGE_SIZE = 10;
 
-type Language = {
-  name: string;
-  metadataValue: string; // "duane.reed@example.com"
-  created: Date;
-  isDefault: boolean;
-};
-
-type DenseTableProps = {
-  languages: Language[];
-};
-
-export const DenseTable = ({ languages }: DenseTableProps) => {
+export const LanguageTable = () => {
+  const [error, setError] = useState<Error>();
   const { t } = useTranslationRef(languageAdminTranslationRef);
+  const languageStorage = useApi(languageStorageApiRef);
 
-  const columns: TableColumn[] = [
-    { title: t('Name'), field: 'name' },
-    { title: t('Metadata value'), field: 'metadataValue' },
-    { title: t('Created'), field: 'created' },
-    { title: t('Actions') },
+  const columns: TableColumn<Language>[] = [
+    {
+      title: t('Name'),
+      field: 'name',
+      render: ({ name, isDefault }) =>
+        isDefault ? (
+          <>
+            {' '}
+            {name} <i>{t('Default')}</i>
+          </>
+        ) : (
+          name
+        ),
+      width: '35%',
+    },
+    { title: t('Code'), field: 'languageCode', width: '25%' },
+    {
+      title: t('Created'),
+      field: 'createdAt',
+      type: 'date',
+      width: '25%',
+    },
+    { title: t('Actions'), width: '10%' },
   ];
 
-  const data = languages.map(language => {
-    const { isDefault, created, ...rest } = language;
-    return {
-      ...rest,
-      name: isDefault ? (
-        <>
-          {rest.name} <i>{t('Default')}</i>
-        </>
-      ) : (
-        rest.name
-      ),
-      created: `${created}`,
-    };
-  });
+  const fetchData = async (query: any) => {
+    try {
+      const page = query?.page ?? 0;
+      const pageSize = query?.pageSize ?? PAGE_SIZE;
+      const result = await languageStorage.listLanguages({
+        offset: page * pageSize,
+        limit: pageSize,
+        orderBy:
+          query?.orderBy &&
+          ({
+            field: query.orderBy.field,
+            direction: query.orderDirection,
+          } as ListLanguagesOptions['orderBy']),
+        filters: query?.filters?.map((filter: any) => ({
+          field: filter.column.field!,
+          value: `*${filter.value}*`,
+        })) as ListLanguagesOptions['filters'],
+      });
+      return {
+        data: result.items,
+        totalCount: result.totalCount,
+        page: Math.floor(result.offset / result.limit),
+      };
+    } catch (loadingError) {
+      setError(loadingError as Error);
+      return { data: [], totalCount: 0, page: 0 };
+    }
+  };
 
+  if (error) {
+    return <ResponseErrorPanel error={error} />;
+  }
   return (
     <Table
       title={t('Languages ({{count}})', { count: 3 } as any)}
-      options={{ search: true, paging: false }}
+      options={{
+        sorting: true,
+        paging: false,
+        debounceInterval: 500,
+      }}
       columns={columns}
-      data={data}
+      data={fetchData}
     />
   );
-};
-
-export const LanguageTable = () => {
-  const { value, loading, error } = useAsync(async (): Promise<User[]> => {
-    // Would use fetch in a real world example
-    return exampleLanguages.results;
-  }, []);
-
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return <ResponseErrorPanel error={error} />;
-  }
-
-  return <DenseTable languages={value || []} />;
 };
