@@ -3,6 +3,7 @@ import {
   Table,
   TableColumn,
   ResponseErrorPanel,
+  LinkButton,
 } from '@backstage/core-components';
 import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
 import { languageAdminTranslationRef } from '../../translation';
@@ -12,6 +13,8 @@ import {
   languageStorageApiRef,
 } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const PAGE_SIZE = 10;
 
@@ -19,6 +22,19 @@ export const LanguageTable = () => {
   const [error, setError] = useState<Error>();
   const { t } = useTranslationRef(languageAdminTranslationRef);
   const languageStorage = useApi(languageStorageApiRef);
+
+  const renderActionCell = ({}) => {
+    return (
+      <>
+        <LinkButton to={''} variant="text">
+          <ModeEditIcon />
+        </LinkButton>
+        <LinkButton to={''} variant="text">
+          <DeleteIcon />
+        </LinkButton>
+      </>
+    );
+  };
 
   const columns: TableColumn<Language>[] = [
     {
@@ -33,16 +49,21 @@ export const LanguageTable = () => {
         ) : (
           name
         ),
-      width: '35%',
+      width: '30%',
     },
-    { title: t('Code'), field: 'languageCode', width: '25%' },
+    { title: t('Language Code'), field: 'languageCode', width: '20%' },
     {
       title: t('Created'),
       field: 'createdAt',
       type: 'date',
       width: '25%',
     },
-    { title: t('Actions'), width: '10%' },
+    {
+      align: 'right',
+      title: t('Actions'),
+      render: renderActionCell,
+      width: '20%',
+    },
   ];
 
   const fetchData = async (query: any) => {

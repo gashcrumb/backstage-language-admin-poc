@@ -57,15 +57,15 @@ const app = createApp({
     resources: [
       createTranslationResource({
         translations: {
-          default: async () => await import('./locales/app/en.json'),
-          de: async () => await import('./locales/app/de.json'),
-          ja: async () => await import('./locales/app/ja.json'),
+          en: async () => await import('./locales/app-translations/en.json'),
+          de: async () => await import('./locales/app-translations/de.json'),
+          ja: async () => await import('./locales/app-translations/ja.json'),
         },
         ref: appTranslationRef,
       }),
       createTranslationResource({
         translations: {
-          default: async () =>
+          en: async () =>
             await import('./locales/i18n-example-frontend/en.json'),
           de: async () =>
             await import('./locales/i18n-example-frontend/de.json'),
@@ -76,7 +76,7 @@ const app = createApp({
       }),
       createTranslationResource({
         translations: {
-          default: async () => await import('./locales/language-admin/en.json'),
+          en: async () => await import('./locales/language-admin/en.json'),
           de: async () => await import('./locales/language-admin/de.json'),
           ja: async () => await import('./locales/language-admin/ja.json'),
         },
@@ -84,7 +84,7 @@ const app = createApp({
       }),
       createTranslationResource({
         translations: {
-          default: async () => await import('./locales/user-settings/en.json'),
+          en: async () => await import('./locales/user-settings/en.json'),
           de: async () => await import('./locales/user-settings/de.json'),
           ja: async () => await import('./locales/user-settings/ja.json'),
         },
