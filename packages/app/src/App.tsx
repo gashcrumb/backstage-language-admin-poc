@@ -39,17 +39,12 @@ import LightIcon from '@mui/icons-material/WbSunny';
 import DarkIcon from '@mui/icons-material/Brightness2';
 import { lightTheme, darkTheme } from 'patternfly-backstage-theme';
 
-import { appTranslationRef } from './translation';
+import { I18NExampleFrontendPage } from '@internal/plugin-i18n-example-frontend';
 import {
-  I18NExampleFrontendPage,
-  i18nExampleFrontendTranslationRef,
-} from '@internal/plugin-i18n-example-frontend';
-import { userSettingsTranslationRef } from '@backstage/plugin-user-settings/alpha';
-import { createTranslationResource } from '@backstage/core-plugin-api/alpha';
-import {
-  LanguageAdminPage,
-  languageAdminTranslationRef,
-} from '@internal/plugin-language-admin';
+  TranslationRef,
+  createTranslationResource,
+} from '@backstage/core-plugin-api/alpha';
+import { LanguageAdminPage } from '@internal/plugin-language-admin';
 
 const app = createApp({
   __experimentalTranslations: {
@@ -61,7 +56,7 @@ const app = createApp({
           de: async () => await import('./locales/app-translations/de.json'),
           ja: async () => await import('./locales/app-translations/ja.json'),
         },
-        ref: appTranslationRef,
+        ref: { id: 'app-translations' } as TranslationRef,
       }),
       createTranslationResource({
         translations: {
@@ -72,7 +67,7 @@ const app = createApp({
           ja: async () =>
             await import('./locales/i18n-example-frontend/ja.json'),
         },
-        ref: i18nExampleFrontendTranslationRef,
+        ref: { id: 'i18n-example-frontend' } as TranslationRef,
       }),
       createTranslationResource({
         translations: {
@@ -80,7 +75,7 @@ const app = createApp({
           de: async () => await import('./locales/language-admin/de.json'),
           ja: async () => await import('./locales/language-admin/ja.json'),
         },
-        ref: languageAdminTranslationRef,
+        ref: { id: 'language-admin' } as TranslationRef,
       }),
       createTranslationResource({
         translations: {
@@ -88,7 +83,7 @@ const app = createApp({
           de: async () => await import('./locales/user-settings/de.json'),
           ja: async () => await import('./locales/user-settings/ja.json'),
         },
-        ref: userSettingsTranslationRef,
+        ref: { id: 'user-settings' } as TranslationRef,
       }),
     ],
   },

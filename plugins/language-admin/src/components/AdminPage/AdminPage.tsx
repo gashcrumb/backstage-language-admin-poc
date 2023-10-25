@@ -9,21 +9,14 @@ import {
   TabbedLayout,
 } from '@backstage/core-components';
 import { LanguageTable } from '../LanguageTable';
-import {
-  appLanguageApiRef,
-  translationApiRef,
-  useTranslationRef,
-} from '@backstage/core-plugin-api/alpha';
+import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
 import { languageAdminTranslationRef } from '../../translation';
 import { useApi } from '@backstage/core-plugin-api';
+import { languageStorageApiRef } from '../../api';
 
 export const AdminPage = () => {
   const { t } = useTranslationRef(languageAdminTranslationRef);
-  const appLanguageApi = useApi(appLanguageApiRef);
-  const translationApi = useApi(translationApiRef);
-  console.log('available languages: ', appLanguageApi.getAvailableLanguages());
-  console.log('current language: ', appLanguageApi.getLanguage());
-  console.log('translationApi: ', translationApi);
+  const languageStorage = useApi(languageStorageApiRef);
   return (
     <Page themeId="tool">
       <Header title={t('Administration')} />
@@ -40,7 +33,14 @@ export const AdminPage = () => {
         <TabbedLayout.Route path="/" title={t('Languages')}>
           <Content>
             <ContentHeader title={'' /* do not remove */}>
-              <LinkButton to={''} variant="text">
+              <LinkButton
+                onClick={() =>
+                  languageStorage.getLanguageTemplate({ code: 'en' })
+                }
+                to={''}
+                variant="text"
+                color="primary"
+              >
                 {t('Download a template')}
               </LinkButton>
               <LinkButton to={''} color="primary" variant="contained">

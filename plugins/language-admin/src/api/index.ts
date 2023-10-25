@@ -1,4 +1,4 @@
-export { languageStorageApiRef } from './types';
+export { languageAdminApiRef as languageStorageApiRef } from './types';
 export type {
   Language,
   LanguageFields,

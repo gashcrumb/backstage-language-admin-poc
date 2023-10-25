@@ -30,6 +30,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
 import { appTranslationRef } from '../../translation';
+import { IconComponent } from '@backstage/core-plugin-api';
 
 const useSidebarLogoStyles = makeStyles({
   root: {
@@ -93,7 +94,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <SidebarSpace />
         <SidebarDivider />
         <SidebarItem
-          icon={AdminPanelSettingsOutlinedIcon}
+          icon={AdminPanelSettingsOutlinedIcon as IconComponent}
           to="language-admin"
           text={t('Administration')}
         />

@@ -1,0 +1,8 @@
+{
+  "availableLanguages": ["en", "de", "ja"],
+  "languages": {
+    "en": "English (US)",
+    "de": "Deutsch (Germany)",
+    "ja": "日本語 (Japan)"
+  }
+}

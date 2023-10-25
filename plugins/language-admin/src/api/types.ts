@@ -42,7 +42,7 @@ export type GetLanguageTemplateResult = {
   data: any;
 };
 
-export interface LanguageStorageApi {
+export interface LanguageAdminApi {
   getLanguageTemplate(
     options: GetLanguageTemplateOptions,
   ): Promise<GetLanguageTemplateResult>;
@@ -50,6 +50,6 @@ export interface LanguageStorageApi {
   listLanguages(options: ListLanguagesOptions): Promise<ListLanguagesResult>;
 }
 
-export const languageStorageApiRef = createApiRef<LanguageStorageApi>({
-  id: 'plugin.language-admin.api',
+export const languageAdminApiRef = createApiRef<LanguageAdminApi>({
+  id: 'language-admin',
 });

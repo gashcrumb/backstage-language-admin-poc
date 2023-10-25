@@ -4,7 +4,7 @@ import { languageAdminPlugin, LanguageAdminPage } from '../src/plugin';
 import {
   GetLanguageTemplateOptions,
   ListLanguagesOptions,
-  languageStorageApiRef,
+  languageAdminApiRef,
 } from '../src/api/types';
 import { TestApiProvider } from '@backstage/test-utils';
 
@@ -49,7 +49,7 @@ createDevApp()
   .registerPlugin(languageAdminPlugin)
   .addPage({
     element: (
-      <TestApiProvider apis={[[languageStorageApiRef, mockedApi]]}>
+      <TestApiProvider apis={[[languageAdminApiRef, mockedApi]]}>
         <LanguageAdminPage />
       </TestApiProvider>
     ),

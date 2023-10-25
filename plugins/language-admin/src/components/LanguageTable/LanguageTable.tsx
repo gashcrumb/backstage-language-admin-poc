@@ -16,8 +16,6 @@ import { useApi } from '@backstage/core-plugin-api';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const PAGE_SIZE = 10;
-
 export const LanguageTable = () => {
   const [error, setError] = useState<Error>();
   const { t } = useTranslationRef(languageAdminTranslationRef);
@@ -68,17 +66,15 @@ export const LanguageTable = () => {
 
   const fetchData = async (query: any) => {
     try {
-      const page = query?.page ?? 0;
-      const pageSize = query?.pageSize ?? PAGE_SIZE;
       const result = await languageStorage.listLanguages({
-        offset: page * pageSize,
-        limit: pageSize,
-        orderBy:
-          query?.orderBy &&
-          ({
-            field: query.orderBy.field,
-            direction: query.orderDirection,
-          } as ListLanguagesOptions['orderBy']),
+        ...(query?.orderBy
+          ? {
+              orderBy: {
+                field: query.orderBy.field,
+                direction: query.orderDirection,
+              } as ListLanguagesOptions['orderBy'],
+            }
+          : {}),
         filters: query?.filters?.map((filter: any) => ({
           field: filter.column.field!,
           value: `*${filter.value}*`,
@@ -87,7 +83,7 @@ export const LanguageTable = () => {
       return {
         data: result.items,
         totalCount: result.totalCount,
-        page: Math.floor(result.offset / result.limit),
+        page: 0,
       };
     } catch (loadingError) {
       setError(loadingError as Error);
@@ -100,7 +96,7 @@ export const LanguageTable = () => {
   }
   return (
     <Table
-      title={t('Languages ({{count}})', { count: 3 } as any)}
+      title={t('Languages')}
       options={{
         sorting: true,
         paging: false,

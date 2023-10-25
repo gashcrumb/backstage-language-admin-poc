@@ -2,20 +2,25 @@ import {
   createApiFactory,
   createPlugin,
   createRoutableExtension,
+  discoveryApiRef,
+  fetchApiRef,
 } from '@backstage/core-plugin-api';
 
 import { rootRouteRef } from './routes';
 import { languageStorageApiRef } from './api';
-import { InMemoryLanguageStorage } from './api/InMemoryLanguageStorage';
+import { LanguageAdminClient } from './api/LanguageAdminClient';
 
 export const languageAdminPlugin = createPlugin({
   id: 'language-admin',
   apis: [
     createApiFactory({
       api: languageStorageApiRef,
-      deps: {},
-      factory() {
-        return new InMemoryLanguageStorage();
+      deps: {
+        discoveryApi: discoveryApiRef,
+        fetchApi: fetchApiRef,
+      },
+      factory({ discoveryApi, fetchApi }) {
+        return new LanguageAdminClient({ discoveryApi, fetchApi });
       },
     }),
   ],
