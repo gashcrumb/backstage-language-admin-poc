@@ -11,12 +11,9 @@ import {
 import { LanguageTable } from '../LanguageTable';
 import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
 import { languageAdminTranslationRef } from '../../translation';
-import { useApi } from '@backstage/core-plugin-api';
-import { languageStorageApiRef } from '../../api';
 
 export const AdminPage = () => {
   const { t } = useTranslationRef(languageAdminTranslationRef);
-  const languageStorage = useApi(languageStorageApiRef);
   return (
     <Page themeId="tool">
       <Header title={t('Administration')} />
@@ -33,16 +30,6 @@ export const AdminPage = () => {
         <TabbedLayout.Route path="/" title={t('Languages')}>
           <Content>
             <ContentHeader title={'' /* do not remove */}>
-              <LinkButton
-                onClick={() =>
-                  languageStorage.getLanguageTemplate({ code: 'en' })
-                }
-                to={''}
-                variant="text"
-                color="primary"
-              >
-                {t('Download a template')}
-              </LinkButton>
               <LinkButton to={''} color="primary" variant="contained">
                 {t('Add')}
               </LinkButton>

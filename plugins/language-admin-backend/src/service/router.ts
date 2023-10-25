@@ -8,35 +8,12 @@ import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
 
+import * as tags from 'language-tags';
+
 export interface RouterOptions {
   logger: Logger;
   config: Config;
 }
-
-//const DEFAULT_LANGUAGE = 'en';
-
-//const availableLanguages = ['en', 'de', 'ja'];
-
-const languages = [
-  {
-    name: 'English (US)',
-    languageCode: 'en',
-    createdAt: new Date('03/22/2022'),
-    isDefault: true,
-  },
-  {
-    name: 'German (DE)',
-    languageCode: 'de',
-    createdAt: new Date('03/01/2022'),
-    isDefault: false,
-  },
-  {
-    name: 'Japanese (JA)',
-    languageCode: 'ja',
-    createdAt: new Date(),
-    isDefault: false,
-  },
-];
 
 export type LanguageMetadata = {
   availableLanguages: string[];
@@ -89,15 +66,15 @@ export async function createRouter(
     const metadata = fs.readJsonSync(
       path.join(workingDirectory, 'metadata.json'),
     ) as LanguageMetadata;
-    const languages = metadata.availableLanguages.map((lang: string) => {
+    const items = metadata.availableLanguages.map((lang: string) => {
       return {
-        name: metadata.languages[lang],
+        name: tags.language(lang)?.descriptions()[0] || lang,
         languageCode: lang,
         createdAt: new Date(),
         isDefault: lang === 'en',
       };
     });
-    response.json({ items: languages, totalCount: 3, offset: 0, limit: 0 });
+    response.json({ items, totalCount: items.length, offset: 0, limit: 0 });
   });
 
   router.get('/template', (request, response) => {

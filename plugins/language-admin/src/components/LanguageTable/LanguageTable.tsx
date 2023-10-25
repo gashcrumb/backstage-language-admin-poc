@@ -13,7 +13,8 @@ import {
   languageStorageApiRef,
 } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SyncIcon from '@mui/icons-material/Sync';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export const LanguageTable = () => {
@@ -25,7 +26,10 @@ export const LanguageTable = () => {
     return (
       <>
         <LinkButton to={''} variant="text">
-          <ModeEditIcon />
+          <SaveAltIcon />
+        </LinkButton>
+        <LinkButton to={''} variant="text">
+          <SyncIcon />
         </LinkButton>
         <LinkButton to={''} variant="text">
           <DeleteIcon />
@@ -42,7 +46,8 @@ export const LanguageTable = () => {
         isDefault ? (
           <>
             {' '}
-            {name} <i>{t('Default')}</i>
+            {name}&nbsp;&nbsp;
+            <i style={{ fontWeight: 'light', color: 'grey' }}>{t('Default')}</i>
           </>
         ) : (
           name
@@ -57,7 +62,6 @@ export const LanguageTable = () => {
       width: '25%',
     },
     {
-      align: 'right',
       title: t('Actions'),
       render: renderActionCell,
       width: '20%',
