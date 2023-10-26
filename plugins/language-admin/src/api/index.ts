@@ -5,5 +5,4 @@ export type {
   ListLanguagesOptions,
   ListLanguagesResult,
   GetLanguageTemplateOptions,
-  GetLanguageTemplateResult,
 } from './types';

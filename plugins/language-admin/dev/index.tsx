@@ -41,7 +41,6 @@ const mockedApi = {
   },
   getLanguageTemplate: async (options: GetLanguageTemplateOptions) => {
     console.log('getting language template with options: ', options);
-    return { data: {} };
   },
 };
 

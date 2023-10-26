@@ -20,7 +20,7 @@ export type LanguageMetadata = {
   languages: Record<string, string>;
 };
 
-export async function getWorkingDirectory(
+async function getWorkingDirectory(
   config: Config,
   logger: Logger,
 ): Promise<string> {
@@ -42,6 +42,22 @@ export async function getWorkingDirectory(
     throw err;
   }
   return workingDirectory;
+}
+
+function* discoverLangFiles(
+  directory: string,
+  code: string,
+): Generator<string> {
+  const files = fs.readdirSync(directory, { withFileTypes: true });
+  for (const file of files) {
+    if (file.isDirectory()) {
+      yield* discoverLangFiles(path.join(directory, file.name), code);
+    } else {
+      if (file.name.endsWith(`${code}.json`)) {
+        yield path.join(directory, file.name);
+      }
+    }
+  }
 }
 
 export async function createRouter(
@@ -79,7 +95,25 @@ export async function createRouter(
 
   router.get('/template', (request, response) => {
     logger.info(`template, query: ${JSON.stringify(request.query)}`);
-    response.json({ status: 'ok' });
+    const { code } = request.query;
+    const codeAsString = `${code || 'en'}`;
+    const document = {
+      languageCode: code,
+      translation: {} as Record<string, any>,
+    };
+    for (const file of discoverLangFiles(workingDirectory, codeAsString)) {
+      console.log('File: ', file);
+      const translation = fs.readJsonSync(file);
+      const bits = file.split(path.sep);
+      const namespace = bits[bits.length - 2];
+      document.translation[namespace] = translation;
+    }
+    response.setHeader('Content-Type', 'application/json');
+    response.setHeader(
+      'Content-disposition',
+      `attachment; filename=${code}.json`,
+    );
+    response.send(JSON.stringify(document, undefined, 2));
   });
 
   router.use(errorHandler());

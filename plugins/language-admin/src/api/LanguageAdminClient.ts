@@ -1,7 +1,6 @@
 import { DiscoveryApi, FetchApi } from '@backstage/core-plugin-api';
 import {
   GetLanguageTemplateOptions,
-  GetLanguageTemplateResult,
   LanguageAdminApi,
   ListLanguagesOptions,
   ListLanguagesResult,
@@ -24,41 +23,51 @@ export class LanguageAdminClient implements LanguageAdminApi {
     this.fetchApi = options.fetchApi;
   }
 
-  private async fetchLanguageAdminApi<T>(
-    endpoint: string,
-    options: Record<string, any> = {},
-  ): Promise<T> {
+  async getLanguageTemplate(
+    options: GetLanguageTemplateOptions,
+  ): Promise<void> {
     const baseUrl = await this.discoveryApi.getBaseUrl('language-admin');
-    const targetUrl = `${baseUrl}/${endpoint}${
+    const targetUrl = `${baseUrl}/${templateEndpoint}${
       typeof options !== 'undefined'
         ? `?${new URLSearchParams(options).toString()}`
         : ''
     }`;
-    const result = await this.fetchApi.fetch(targetUrl, options);
-    const data = await result.json();
-    if (!result.ok) {
-      throw new Error(`${data.message}`);
-    }
-    return data;
-  }
-
-  async getLanguageTemplate(
-    options: GetLanguageTemplateOptions,
-  ): Promise<GetLanguageTemplateResult> {
-    console.log('Options: ', options);
-    return this.fetchLanguageAdminApi<GetLanguageTemplateResult>(
-      templateEndpoint,
-      options,
-    );
+    this.fetchApi
+      .fetch(targetUrl, {
+        method: 'GET',
+      })
+      .then(res => res.blob())
+      .then(res => {
+        const aElement = document.createElement('a');
+        aElement.setAttribute('download', `${options.code}.json`);
+        const href = URL.createObjectURL(res);
+        aElement.href = href;
+        aElement.setAttribute('target', '_blank');
+        aElement.click();
+        URL.revokeObjectURL(href);
+      });
   }
 
   async listLanguages(
     options: ListLanguagesOptions,
   ): Promise<ListLanguagesResult> {
-    console.log('Options: ', options);
-    return this.fetchLanguageAdminApi<ListLanguagesResult>(
-      listEndpoint,
-      options,
-    );
+    const baseUrl = await this.discoveryApi.getBaseUrl('language-admin');
+    const { orderBy, filters } = options;
+    console.log('OrderBy: ', orderBy, ' filters: ', filters);
+    const targetUrl = `${baseUrl}/${listEndpoint}${
+      typeof options !== 'undefined'
+        ? `?${new URLSearchParams({
+            ...(orderBy
+              ? { orderBy: `${orderBy.field} ${orderBy.direction}` }
+              : {}),
+          }).toString()}`
+        : ''
+    }`;
+    const result = await this.fetchApi.fetch(targetUrl);
+    const data = await result.json();
+    if (!result.ok) {
+      throw new Error(`${data.message}`);
+    }
+    return data;
   }
 }

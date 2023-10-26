@@ -22,10 +22,15 @@ export const LanguageTable = () => {
   const { t } = useTranslationRef(languageAdminTranslationRef);
   const languageStorage = useApi(languageStorageApiRef);
 
-  const renderActionCell = ({}) => {
+  const renderActionCell = ({ languageCode }: Language) => {
     return (
       <>
-        <LinkButton to={''} variant="text">
+        <LinkButton
+          onClick={() =>
+            languageStorage.getLanguageTemplate({ code: languageCode })
+          }
+          to={''}
+        >
           <SaveAltIcon />
         </LinkButton>
         <LinkButton to={''} variant="text">
@@ -71,14 +76,10 @@ export const LanguageTable = () => {
   const fetchData = async (query: any) => {
     try {
       const result = await languageStorage.listLanguages({
-        ...(query?.orderBy
-          ? {
-              orderBy: {
-                field: query.orderBy.field,
-                direction: query.orderDirection,
-              } as ListLanguagesOptions['orderBy'],
-            }
-          : {}),
+        orderBy: query?.orderBy && {
+          field: query.orderBy.field,
+          direction: query.orderDirection,
+        },
         filters: query?.filters?.map((filter: any) => ({
           field: filter.column.field!,
           value: `*${filter.value}*`,

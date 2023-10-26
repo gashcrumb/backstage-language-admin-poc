@@ -14,8 +14,6 @@ export type LanguageFields =
   | 'isDefault';
 
 export type ListLanguagesOptions = {
-  offset?: number;
-  limit?: number;
   orderBy?: {
     field: LanguageFields;
     direction: 'asc' | 'desc';
@@ -38,14 +36,8 @@ export type GetLanguageTemplateOptions = {
   code: string;
 };
 
-export type GetLanguageTemplateResult = {
-  data: any;
-};
-
 export interface LanguageAdminApi {
-  getLanguageTemplate(
-    options: GetLanguageTemplateOptions,
-  ): Promise<GetLanguageTemplateResult>;
+  getLanguageTemplate(options: GetLanguageTemplateOptions): Promise<void>;
 
   listLanguages(options: ListLanguagesOptions): Promise<ListLanguagesResult>;
 }
