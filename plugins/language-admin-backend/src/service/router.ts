@@ -7,7 +7,6 @@ import { Logger } from 'winston';
 import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
-
 import * as tags from 'language-tags';
 
 export interface RouterOptions {
@@ -71,50 +70,104 @@ export async function createRouter(
   );
 
   const router = Router();
-  router.use(express.json());
+  router.use(express.json({ limit: '10MB' }));
 
   router.get('/health', (_, response) => {
     response.json({ status: 'ok' });
   });
 
-  router.get('/list', async (request, response) => {
-    logger.info(`list, query: ${JSON.stringify(request.query)}`);
-    const metadata = fs.readJsonSync(
-      path.join(workingDirectory, 'metadata.json'),
-    ) as LanguageMetadata;
-    const items = metadata.availableLanguages.map((lang: string) => {
-      return {
-        name: tags.language(lang)?.descriptions()[0] || lang,
-        languageCode: lang,
-        createdAt: new Date(),
-        isDefault: lang === 'en',
+  router
+    /**
+     * List the available languages
+     */
+    .get('/list', async (request, response) => {
+      logger.info(`list, query: ${JSON.stringify(request.query)}`);
+      const metadata = fs.readJsonSync(
+        path.join(workingDirectory, 'metadata.json'),
+      ) as LanguageMetadata;
+      const items = metadata.availableLanguages.map((lang: string) => {
+        return {
+          name: tags.language(lang)?.descriptions()[0] || lang,
+          languageCode: lang,
+          createdAt: new Date(),
+          isDefault: lang === 'en',
+        };
+      });
+      response.json({ items, totalCount: items.length, offset: 0, limit: 0 });
+    })
+    /**
+     * Download a language file to use as a template
+     */
+    .get('/template', (request, response) => {
+      logger.info(`get template, query: ${JSON.stringify(request.query)}`);
+      const { code } = request.query;
+      const codeAsString = `${code || 'en'}`;
+      const document = {
+        languageCode: code,
+        translation: {} as Record<string, any>,
       };
+      for (const file of discoverLangFiles(workingDirectory, codeAsString)) {
+        console.log('File: ', file);
+        const translation = fs.readJsonSync(file);
+        const bits = file.split(path.sep);
+        const namespace = bits[bits.length - 2];
+        document.translation[namespace] = translation;
+      }
+      response.setHeader('Content-Type', 'application/json');
+      response.setHeader(
+        'Content-disposition',
+        `attachment; filename=${code}.json`,
+      );
+      response.send(JSON.stringify(document, undefined, 2));
+    })
+    /**
+     * Upload or replace a language file
+     */
+    .post('/upload', async (request, response) => {
+      logger.info(
+        `upload translation, query: ${JSON.stringify(request.query)}`,
+      );
+      const { languageCode, translation } = request.body;
+      if (!languageCode || !translation) {
+        response.status(400).send({
+          message:
+            'Invalid translation document uploaded, missing languageCode attribute',
+        });
+        return;
+      }
+      if (!translation) {
+        response.status(400).send({
+          message:
+            'Invalid translation document uploaded, missing translation attribute',
+        });
+        return;
+      }
+      if (!tags.check(languageCode)) {
+        response.status(400).send({
+          message: `Invalid translation document uploaded, unknown language code "${languageCode}"`,
+        });
+        return;
+      }
+      const metadata = fs.readJsonSync(
+        path.join(workingDirectory, 'metadata.json'),
+      ) as LanguageMetadata;
+      const availableLanguages = Array.from(
+        new Set([...metadata.availableLanguages, languageCode]),
+      );
+      fs.outputJsonSync(path.join(workingDirectory, 'metadata.json'), {
+        ...metadata,
+        availableLanguages,
+      });
+      Object.keys(translation).forEach(namespace => {
+        const filePath = path.join(
+          workingDirectory,
+          namespace,
+          `${languageCode}.json`,
+        );
+        fs.outputJsonSync(filePath, translation[namespace]);
+      });
+      response.sendStatus(200);
     });
-    response.json({ items, totalCount: items.length, offset: 0, limit: 0 });
-  });
-
-  router.get('/template', (request, response) => {
-    logger.info(`template, query: ${JSON.stringify(request.query)}`);
-    const { code } = request.query;
-    const codeAsString = `${code || 'en'}`;
-    const document = {
-      languageCode: code,
-      translation: {} as Record<string, any>,
-    };
-    for (const file of discoverLangFiles(workingDirectory, codeAsString)) {
-      console.log('File: ', file);
-      const translation = fs.readJsonSync(file);
-      const bits = file.split(path.sep);
-      const namespace = bits[bits.length - 2];
-      document.translation[namespace] = translation;
-    }
-    response.setHeader('Content-Type', 'application/json');
-    response.setHeader(
-      'Content-disposition',
-      `attachment; filename=${code}.json`,
-    );
-    response.send(JSON.stringify(document, undefined, 2));
-  });
 
   router.use(errorHandler());
   return router;
