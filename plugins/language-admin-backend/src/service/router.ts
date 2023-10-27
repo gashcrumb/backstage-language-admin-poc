@@ -107,7 +107,6 @@ export async function createRouter(
         translation: {} as Record<string, any>,
       };
       for (const file of discoverLangFiles(workingDirectory, codeAsString)) {
-        console.log('File: ', file);
         const translation = fs.readJsonSync(file);
         const bits = file.split(path.sep);
         const namespace = bits[bits.length - 2];
@@ -121,9 +120,47 @@ export async function createRouter(
       response.send(JSON.stringify(document, undefined, 2));
     })
     /**
+     * Delete a language file
+     */
+    .delete('/template', async (request, response) => {
+      logger.info(`delete template, query: ${JSON.stringify(request.query)}`);
+      const { code } = request.query;
+      if (!code) {
+        response.status(400).send({
+          message: `delete failed, no language code sent`,
+        });
+        return;
+      }
+      const codeAsString = `${code}`;
+      if (!tags.check(codeAsString)) {
+        response.status(400).send({
+          message: `delete failed, unknown language code "${code}"`,
+        });
+        return;
+      }
+      const metadata = fs.readJsonSync(
+        path.join(workingDirectory, 'metadata.json'),
+      ) as LanguageMetadata;
+      const availableLanguages = metadata.availableLanguages.filter(
+        lang => lang !== code,
+      );
+      fs.outputJsonSync(path.join(workingDirectory, 'metadata.json'), {
+        ...metadata,
+        availableLanguages,
+      });
+      for (const file of discoverLangFiles(workingDirectory, codeAsString)) {
+        try {
+          await fs.remove(file);
+        } catch (err) {
+          logger.info(`Caught "${err}" while deleting file "${file}"`);
+        }
+      }
+      response.sendStatus(200);
+    })
+    /**
      * Upload or replace a language file
      */
-    .post('/upload', async (request, response) => {
+    .post('/template', async (request, response) => {
       logger.info(
         `upload translation, query: ${JSON.stringify(request.query)}`,
       );
