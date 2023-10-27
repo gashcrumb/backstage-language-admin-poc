@@ -11,7 +11,7 @@ export interface LanguageAdminClientOptions {
   fetchApi: FetchApi;
 }
 
-const templateEndpoint = 'template';
+const languageEndpoint = 'language';
 const listEndpoint = 'list';
 
 export class LanguageAdminClient implements LanguageAdminApi {
@@ -27,7 +27,7 @@ export class LanguageAdminClient implements LanguageAdminApi {
     options: GetLanguageTemplateOptions,
   ): Promise<void> {
     const baseUrl = await this.discoveryApi.getBaseUrl('language-admin');
-    const targetUrl = `${baseUrl}/${templateEndpoint}${
+    const targetUrl = `${baseUrl}/${languageEndpoint}${
       typeof options !== 'undefined'
         ? `?${new URLSearchParams(options).toString()}`
         : ''

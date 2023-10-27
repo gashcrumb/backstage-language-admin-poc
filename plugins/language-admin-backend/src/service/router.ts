@@ -98,8 +98,8 @@ export async function createRouter(
     /**
      * Download a language file to use as a template
      */
-    .get('/template', (request, response) => {
-      logger.info(`get template, query: ${JSON.stringify(request.query)}`);
+    .get('/language', (request, response) => {
+      logger.info(`get language, query: ${JSON.stringify(request.query)}`);
       const { code } = request.query;
       const codeAsString = `${code || 'en'}`;
       const document = {
@@ -122,8 +122,8 @@ export async function createRouter(
     /**
      * Delete a language file
      */
-    .delete('/template', async (request, response) => {
-      logger.info(`delete template, query: ${JSON.stringify(request.query)}`);
+    .delete('/language', async (request, response) => {
+      logger.info(`delete language, query: ${JSON.stringify(request.query)}`);
       const { code } = request.query;
       if (!code) {
         response.status(400).send({
@@ -160,10 +160,8 @@ export async function createRouter(
     /**
      * Upload or replace a language file
      */
-    .post('/template', async (request, response) => {
-      logger.info(
-        `upload translation, query: ${JSON.stringify(request.query)}`,
-      );
+    .post('/language', async (request, response) => {
+      logger.info(`upload language, query: ${JSON.stringify(request.query)}`);
       const { languageCode, translation } = request.body;
       if (!languageCode || !translation) {
         response.status(400).send({
