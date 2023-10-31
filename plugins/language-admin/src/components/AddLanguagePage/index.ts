@@ -1,0 +1,1 @@
+export { AddLanguagePage } from './AddLanguagePage';

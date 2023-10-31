@@ -6,7 +6,7 @@ import {
   fetchApiRef,
 } from '@backstage/core-plugin-api';
 
-import { rootRouteRef } from './routes';
+import { addLanguageRouteRef, rootRouteRef } from './routes';
 import { languageStorageApiRef } from './api';
 import { LanguageAdminClient } from './api/LanguageAdminClient';
 
@@ -26,14 +26,14 @@ export const languageAdminPlugin = createPlugin({
   ],
   routes: {
     root: rootRouteRef,
+    addLanguage: addLanguageRouteRef,
   },
 });
 
 export const LanguageAdminPage = languageAdminPlugin.provide(
   createRoutableExtension({
     name: 'LanguageAdminPage',
-    component: () =>
-      import('./components/AdminPage').then(m => m.ExampleComponent),
+    component: () => import('./components/Router').then(m => m.Router),
     mountPoint: rootRouteRef,
   }),
 );

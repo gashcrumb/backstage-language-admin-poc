@@ -4,5 +4,5 @@ export type {
   LanguageFields,
   ListLanguagesOptions,
   ListLanguagesResult,
-  GetLanguageTemplateOptions,
+  GetLanguageOptions as GetLanguageTemplateOptions,
 } from './types';

@@ -2,7 +2,7 @@ import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
 import { languageAdminPlugin, LanguageAdminPage } from '../src/plugin';
 import {
-  GetLanguageTemplateOptions,
+  GetLanguageOptions,
   ListLanguagesOptions,
   languageAdminApiRef,
 } from '../src/api/types';
@@ -39,7 +39,7 @@ const mockedApi = {
     console.log('listing languages with options: ', options);
     return listLanguagesResult;
   },
-  getLanguageTemplate: async (options: GetLanguageTemplateOptions) => {
+  getLanguageTemplate: async (options: GetLanguageOptions) => {
     console.log('getting language template with options: ', options);
   },
 };

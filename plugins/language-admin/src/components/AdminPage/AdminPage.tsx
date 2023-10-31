@@ -11,8 +11,11 @@ import {
 import { LanguageTable } from '../LanguageTable';
 import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
 import { languageAdminTranslationRef } from '../../translation';
+import { addLanguageRouteRef } from '../../routes';
+import { useRouteRef } from '@backstage/core-plugin-api';
 
 export const AdminPage = () => {
+  const addLanguageLink = useRouteRef(addLanguageRouteRef);
   const { t } = useTranslationRef(languageAdminTranslationRef);
   return (
     <Page themeId="tool">
@@ -30,7 +33,11 @@ export const AdminPage = () => {
         <TabbedLayout.Route path="/" title={t('Languages')}>
           <Content>
             <ContentHeader title={'' /* do not remove */}>
-              <LinkButton to={''} color="primary" variant="contained">
+              <LinkButton
+                to={addLanguageLink()}
+                color="primary"
+                variant="contained"
+              >
                 {t('Add')}
               </LinkButton>
               <SupportButton title={t('Support')}>

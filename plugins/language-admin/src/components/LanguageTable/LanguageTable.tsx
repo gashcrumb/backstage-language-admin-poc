@@ -27,7 +27,7 @@ export const LanguageTable = () => {
       <>
         <LinkButton
           onClick={() =>
-            languageStorage.getLanguageTemplate({ code: languageCode })
+            languageStorage.downloadLanguage({ code: languageCode })
           }
           to={''}
         >

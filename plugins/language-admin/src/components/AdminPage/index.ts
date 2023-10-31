@@ -1,1 +1,1 @@
-export { AdminPage as ExampleComponent } from './AdminPage';
+export { AdminPage } from './AdminPage';

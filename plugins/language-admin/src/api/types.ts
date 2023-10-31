@@ -32,13 +32,16 @@ export type ListLanguagesResult = {
   limit: number;
 };
 
-export type GetLanguageTemplateOptions = {
+export type GetLanguageOptions = {
   code: string;
 };
 
-export interface LanguageAdminApi {
-  getLanguageTemplate(options: GetLanguageTemplateOptions): Promise<void>;
+export type AddLanguageOptions = {};
 
+export interface LanguageAdminApi {
+  addLanguage(options: AddLanguageOptions): Promise<void>;
+  deleteLanguage(options: GetLanguageOptions): Promise<void>;
+  downloadLanguage(options: GetLanguageOptions): Promise<void>;
   listLanguages(options: ListLanguagesOptions): Promise<ListLanguagesResult>;
 }
 

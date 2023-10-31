@@ -1,6 +1,7 @@
 import { DiscoveryApi, FetchApi } from '@backstage/core-plugin-api';
 import {
-  GetLanguageTemplateOptions,
+  AddLanguageOptions,
+  GetLanguageOptions,
   LanguageAdminApi,
   ListLanguagesOptions,
   ListLanguagesResult,
@@ -23,9 +24,15 @@ export class LanguageAdminClient implements LanguageAdminApi {
     this.fetchApi = options.fetchApi;
   }
 
-  async getLanguageTemplate(
-    options: GetLanguageTemplateOptions,
-  ): Promise<void> {
+  addLanguage(_options: AddLanguageOptions): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
+  deleteLanguage(_options: GetLanguageOptions): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
+  async downloadLanguage(options: GetLanguageOptions): Promise<void> {
     const baseUrl = await this.discoveryApi.getBaseUrl('language-admin');
     const targetUrl = `${baseUrl}/${languageEndpoint}${
       typeof options !== 'undefined'
